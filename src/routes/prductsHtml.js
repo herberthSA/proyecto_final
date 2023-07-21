@@ -1,13 +1,23 @@
 import  express  from "express";
 import { productService } from "../services/products.service.js";
+import { checkUser } from "../middlewares/auth.js";
 const products = new productService()
 
 export const productsHtml = express.Router();
 
-productsHtml.get("/", async (req, res) => {
+productsHtml.get("/",checkUser, async (req, res) => {
   
     const {limit , page} = req.query
     const {category}= req.params
+    const  users ={
+      firstname : req.session.firstName,
+      admin :req.session.admin,
+      email: req.session.email
+
+    }
+    console.log(users.firstname)
+    
+    
     try {
       const productsAll = await products.getAll(limit,page,category);
       let productsView = productsAll.docs.map(products=>{
@@ -18,14 +28,23 @@ productsHtml.get("/", async (req, res) => {
           price: products.price,
           thumbnail: products.thumbnail,
           code: products.code,
-	      status: products.status,
-	      category:products.category,
+          status: products.status,
+          category:products.category,
           stock: products.stock
         };
       })
-      console.log(productsView);
+       let pagination = {
+        totalPages:productsAll.totalPages,
+        prevPages: productsAll.prevPage,
+        nextPage: productsAll.prevPage,
+        page: productsAll.page,
+        hasPrevPage: productsAll.hasPrevPage,
+        hasNextPage: productsAll.hasNextPage,
+        prevLink: productsAll.hasPrevPage ? `http://localhost:8080/api/products?page=${productsAll.prevPage}`: null,
+        nextLink: productsAll.hasNextPage ? `http://localhost:8080/api/products?page=${productsAll.nextPage}`: null
+      }
 
-      return res.status(200).render('products',{products:productsView})
+      return res.status(200).render('products',{products:productsView , pagination, users})
        /* return res.status(200).render('products',{
           status: "success",
           payload: productsAll.docs,
