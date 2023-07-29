@@ -24,11 +24,20 @@ const schema = new Schema({
     required: true,
     max: 100,
   },
+  age:{
+    type: Number,
+    required: true,
 
-  admin: {
-    type: Boolean,
+  },
+
+   rol : {
+    type: String,
     required: false,
-    default:false
+    default:'user'
+  },
+  cart: {
+    type: String,
+    required: false,
   },
 });
 schema.plugin(monsoosePaginate);

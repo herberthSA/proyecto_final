@@ -10,12 +10,12 @@ productsHtml.get("/",checkUser, async (req, res) => {
     const {limit , page} = req.query
     const {category}= req.params
     const  users ={
-      firstname : req.session.firstName,
-      admin :req.session.admin,
+      firstname : req.session.user.firstName,
+      admin :req.session.user.rol,
       email: req.session.email
 
     }
-    console.log(users.firstname)
+    console.log(req.session.user)
     
     
     try {

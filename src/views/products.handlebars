@@ -1,11 +1,8 @@
 <h1 class="text-center">Productos</h1>
 <h2>
   Bienvenido: {{users.firstname}}
-  {{#if users.admin}}
-     <h2 class="text-center">Rol: Admin</h2>
-  {{else}}
-     <h2 class="text-center">Rol: User</h2>
-  {{/if}}
+  <h2 class="text-center">Rol: {{users.admin}}</h2>
+    
 </h2>
 <button onclick="addCart()">add cart</button>
 <table id="table" class="table" >

@@ -1,7 +1,8 @@
 import express from "express";
 import MongoStore from 'connect-mongo';
 import morgan from "morgan";
-import session from 'express-session'
+import session from 'express-session';
+import passport from "passport";
 import { routerProducts } from "./routes/productsRouters.js";
 import { connectMongo } from "./utils/connections.js";
 import { routerCarts } from "./routes/cartsRouter.js";
@@ -11,6 +12,8 @@ import { productsHtml } from "./routes/prductsHtml.js";
 import { cartstsHtml } from "./routes/cartsHtml.js";
 import { loginRouter } from "./routes/login.router.js";
 import { viewsRouter } from "./routes/views.routers.js";
+import { iniPassport } from "./config/passportConfig.js";
+
 
 
 
@@ -28,6 +31,9 @@ app.use(
     saveUninitialized: true,
   })
 );
+iniPassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.engine('handlebars',handlebars.engine());
 app.set("views", __dirname + "/views");
@@ -47,9 +53,17 @@ app.use('/carts',cartstsHtml);
 
 //rutas-session
 app.use('/api/sessions',loginRouter);
+/* app.use('/api/sessions/current', (req, res) => {
+  console.log(req.session.user)
+  return res.status(200).json({
+    status: 'success',
+    msg: 'datos de la session',
+    payload: req.session.user || {},
+  });
+}); */
 app.use('/', viewsRouter);
 
 
 app.listen(port, () => {
-    console.log(`listening on port ${port}`);
+    console.log(`listening on http://localhost:${port}`);
   });
