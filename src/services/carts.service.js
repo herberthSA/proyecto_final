@@ -171,7 +171,7 @@ async purchase(id,email){
 }
 }
 
-export const carts = new cartsService ();
+export const carts = new cartsService();
 
 
 

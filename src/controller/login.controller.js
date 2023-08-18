@@ -1,4 +1,4 @@
-import { userData } from "../services/users.service";
+import { userData } from "../services/users.service.js";
 
 class loginControlllers {
     register = (req, res) => {

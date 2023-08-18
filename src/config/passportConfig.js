@@ -2,8 +2,8 @@ import passport from 'passport';
 import local from 'passport-local';
 import { createHash, isValidPassword } from '../utils/bcrypt.js';
 import { UserModel } from '../DAO/models/users.model.js';
-import { cartsService } from '../services/carts.service.js';
-const carts = new cartsService
+import {carts} from '../services/carts.service.js';
+
 const LocalStrategy = local.Strategy;
 
 export function iniPassport() {

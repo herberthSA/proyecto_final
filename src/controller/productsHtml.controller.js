@@ -1,4 +1,4 @@
-import { products } from "../services/products.service"
+import { products } from "../services/products.service.js"
 
 class productsHtmlcontrollers {
 

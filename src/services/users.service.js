@@ -1,4 +1,4 @@
-import { UserModel } from "../DAO/models/users.model";
+import { UserModel } from "../DAO/models/users.model.js";
 
 class userDatas {
     async usersInformation(id){

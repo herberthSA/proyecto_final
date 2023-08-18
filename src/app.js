@@ -3,6 +3,7 @@ import MongoStore from 'connect-mongo';
 import morgan from "morgan";
 import session from 'express-session';
 import passport from "passport";
+import { Server } from 'socket.io';
 import { routerProducts } from "./routes/productsRouters.js";
 import { connectMongo } from "./utils/connections.js";
 import { routerCarts } from "./routes/cartsRouter.js";
@@ -14,6 +15,8 @@ import { loginRouter } from "./routes/login.router.js";
 import { viewsRouter } from "./routes/views.routers.js";
 import { iniPassport } from "./config/passportConfig.js";
 import dotenv from "dotenv";
+import { MsgModel } from "./DAO/models/chat.model.js";
+import { routerVistaChatSocket } from "./routes/chat-vista-router.js";
 
 dotenv.config();
 
@@ -50,6 +53,8 @@ app.use('/api/carts', routerCarts);
 //Rutas : HTML render
 app.use('/products',productsHtml);
 app.use('/carts',cartstsHtml);
+//chat-socket
+app.use('/vista/chat', routerVistaChatSocket);
 
 //rutas-session
 app.use('/api/sessions',loginRouter);
@@ -64,6 +69,18 @@ app.use('/api/sessions',loginRouter);
 app.use('/', viewsRouter);
 
 
-app.listen(port, () => {
+const httpServer = app.listen(port, () => {
     console.log(`listening on http://localhost:${port}`);
   });
+const socketServer = new Server(httpServer);
+socketServer.on('connection', (socket) => {
+  console.log('Cliente conectado');
+  socket.on('msg_front_to_back', async (msg) => {
+    console.log(msg)
+    const msgCreated = await MsgModel.create(msg);
+    console.log(msgCreated)
+    const msgs = await MsgModel.find({});
+    console.log(msgs)
+    socketServer.emit('todos_los_msgs', msgs);
+  });
+});
