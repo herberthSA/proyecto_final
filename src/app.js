@@ -8,18 +8,18 @@ import { connectMongo } from "./utils/connections.js";
 import { routerCarts } from "./routes/cartsRouter.js";
 import handlebars from 'express-handlebars';
 import { __dirname } from "./utils.js";
-import { productsHtml } from "./routes/prductsHtml.js";
+import { productsHtml } from "./routes/productsHtml.js";
 import { cartstsHtml } from "./routes/cartsHtml.js";
 import { loginRouter } from "./routes/login.router.js";
 import { viewsRouter } from "./routes/views.routers.js";
 import { iniPassport } from "./config/passportConfig.js";
+import dotenv from "dotenv";
 
-
-
+dotenv.config();
 
 connectMongo();
 const app = express();
-const port = 8080;
+const port = process.env.PORT;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

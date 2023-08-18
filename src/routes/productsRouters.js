@@ -1,75 +1,22 @@
 import express from "express";
-import { productService } from "../services/products.service.js";
-const products = new productService();
+import { checkAdmin } from "../middlewares/auth.js";
+import { productsController } from "../controller/products.controller.js";
 
 export const routerProducts = express.Router();
 
-routerProducts.get("/", async (req, res) => {
-  
-  const {limit , page} = req.query
-  const {category}= req.params
-  try {
-    const productsAll = await products.getAll(limit,page,category);
-     return res.status(200).json({
-        status: "success",
-        payload: productsAll.docs,
-        totalPages:productsAll.totalPages,
-        prevPages: productsAll.prevPage,
-        nextPage: productsAll.prevPage,
-        page: productsAll.page,
-        hasPrevPage: productsAll.hasPrevPage,
-        hasNextPage: productsAll.hasNextPage,
-        prevLink: productsAll.hasPrevPage ? `http://localhost:8080/api/products?page=${productsAll.prevPage}`: null,
-        nextLink: productsAll.hasNextPage ? `http://localhost:8080/api/products?page=${productsAll.nextPage}`: null
-    })
-  
+// Ruta para ver todos los productos al igual se puede enviar un limite de en productos
+routerProducts.get("/", productsController.getProducts);
+// Ruta para ver un producto en especifico
+routerProducts.get("/:pid", productsController.getOneproduct);
+// Ruta para agregar nuevos productos
+routerProducts.post("/",checkAdmin,productsController.addProduct);
+// Ruta para eliminar un producto por su ID
+routerProducts.delete('/:pid',checkAdmin,productsController.deleteProduct);
+// Ruta para actualizar un campo y su valor por medio del ID
+routerProducts.put('/:pid',checkAdmin,productsController.updateProduct);
 
-    
-    
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: "error",
-      msg: "something went wrong :(",
-      data: {},
-    });
-  
-}
-});
 
-routerProducts.post("/", async (req, res) => {
-  try {
-    const {
-      title,
-      description,
-      price,
-      thumbnail,
-      status,
-      category,
-      code,
-      stock,
-    } = req.body;
-    const productCreated = await products.createOne(
-      title,
-      description,
-      price,
-      thumbnail,
-      status,
-      category,
-      code,
-      stock
-    );
-    return res.status(201).json({
-      status: "success",
-      msg: "user created",
-      data: productCreated,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: "error",
-      msg: "something went wrong :(",
-      data: {},
-    });
-  }
-});
+
+
+
+

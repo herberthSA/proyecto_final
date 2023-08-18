@@ -1,5 +1,8 @@
 import { cartsModel } from "../DAO/models/carts.model.js";
-export class cartsService {
+import { ticketsModel } from "../DAO/models/ticket.model.js";
+import { products } from "./products.service.js";
+
+class cartsService {
 
 async viewAll (id){
     const viewCarts = await cartsModel.findOne({_id:id}).populate('products.product')
@@ -14,6 +17,7 @@ async createOne (){
     return productCreated;
 }
 async deleteOne(cartId , productId ){
+  const msg = ''
     try {
         const result = await cartsModel.updateOne(
           { _id: cartId },
@@ -21,10 +25,10 @@ async deleteOne(cartId , productId ){
         );
     
         if (result.nModified === 0) {
-            console.log('No se encontró el carrito o el producto en el carrito.');
+          console.log('No se encontró el carrito o el producto en el carrito.');;
         }
     
-        console.log('Producto eliminado del carrito.');
+        console.log('Producto eliminado del carrito.');;
       } catch (error) {
         console.log('Error al eliminar el producto del carrito:', error);
       }
@@ -61,9 +65,7 @@ try {
       }
     }
    
-   
-    
-    }
+   }
     catch (error) {
         console.log(error);
         
@@ -95,7 +97,81 @@ async updateQuantity(cartId, productId, newQuantity){
     
     
 }
+
+ #generateRandomCode(length) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let code = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    code += characters.charAt(randomIndex);
+  }
+  return code;
 }
+#getCurrentDateTime() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+async createTicket(id,amount,email){
+  const newTicket = {
+    code: this.#generateRandomCode(8), // Genera un código de 8 caracteres
+    purchase_datetime: this.#getCurrentDateTime(),
+    amount: amount,
+    purchase: [
+      {
+        email: email,
+        cart: id,
+      }
+    ]
+  };
+
+   const result = await ticketsModel.create(newTicket)
+   return result
+}
+async purchase(id,email){
+  const result = await this.viewAll(id);
+  let amount = 0;
+  console.log(result.products);
+
+  for (const product of result.products) {
+    const infoProduct = product.product;
+    const stock = infoProduct.stock;
+    const productID = infoProduct._id.toString();
+    const quantity = product.quantity;
+    const availabilityProduct = stock - quantity;
+
+    if (availabilityProduct >= 0) {
+      await this.deleteOne(id, productID);
+      
+      // Aquí debes asegurarte de usar la sintaxis correcta para updateOne
+      await products.updateOne(productID,
+          infoProduct.title,
+          infoProduct.description,
+          infoProduct.price,
+          infoProduct.thumbnail,
+          infoProduct.status,
+          infoProduct.category,
+          infoProduct.code,
+          availabilityProduct
+      );
+
+      amount += infoProduct.price;
+    }
+  }
+
+  console.log("Monto total:", amount);
+   const newTicket =await this.createTicket(id,amount,email)
+  return newTicket;
+
+}
+}
+
+export const carts = new cartsService ();
 
 
 

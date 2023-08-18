@@ -7,7 +7,7 @@ const productsSchema = new Schema ({
     thumbnail:{type: String },
     status: {type: Boolean ,required:true},
     category:{ type: String ,required:true },
-    code: { type: String ,required:true },
+    code: { type: String ,required:true , unique:true },
     stock: { type: Number ,required:true },
 })
 productsSchema.plugin(mongoosePaginate)

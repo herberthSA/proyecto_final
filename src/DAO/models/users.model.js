@@ -36,8 +36,8 @@ const schema = new Schema({
     default:'user'
   },
   cart: {
-    type: String,
-    required: false,
+    type: Schema.Types.ObjectId,
+    ref: 'carts',
   },
 });
 schema.plugin(monsoosePaginate);

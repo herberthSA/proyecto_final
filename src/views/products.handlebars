@@ -4,8 +4,8 @@
   <h2 class="text-center">Rol: {{users.admin}}</h2>
     
 </h2>
-<button onclick="addCart()">add cart</button>
-<table id="table" class="table" >
+                          
+<table id="table" class="table">
  <thead>
     <tr>
       <th scope="col">ID</th>
@@ -17,10 +17,13 @@
       <th scope="col" >Category</th>
       <th scope="col" >Code</th>
       <th scope="col" >Stock</th>
+      {{#if isAdmin}} <!-- Condición para mostrar la columna "Eliminar" <button onclick="addCart()">add cart</button>   -->
+        <th scope="col" >Eliminar</th>
+      {{/if}}
     </tr>
   </thead>
-<tbody >
-      {{#each products}}
+<tbody>
+   {{#each products}}
       <tr>
         <td>{{this.id}}</td>
         <td>{{this.title}}</td>
@@ -30,8 +33,13 @@
         <td>{{this.status}}</td>
         <td>{{this.category}}</td>
         <td>{{this.code}}</td>
-        <td>{{this.stock }}</td>     
-      </tr>
+        <td>{{this.stock}}</td>
+        {{#if @root.isAdmin}} <!-- Condición para mostrar el botón de eliminar <script src='/js/boton.js'></script>-->
+          <td>
+             <button onclick="deleteProduct('{{this.id}}')">Eliminar</button>
+          </td>
+        {{/if}}
+       </tr>
       {{/each}}
 </tbody>
 </table>

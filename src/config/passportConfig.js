@@ -38,7 +38,7 @@ export function iniPassport() {
       },
       async (req, username, password, done) => {
         try {
-          const { email, firstName, lastName,rol } = req.body;
+          const { email, firstName, lastName,age,rol } = req.body;
           let user = await UserModel.findOne({ email: username });
           if (user) {
             console.log('User already exists');

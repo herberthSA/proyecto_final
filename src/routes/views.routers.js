@@ -1,11 +1,6 @@
 import express from "express"
+import { viewController } from "../controller/viewsController.js";
 export const viewsRouter = express.Router();
 
-viewsRouter.get('',async(req,res)=>{
-    res.status(200).render('login',{})
-
-})
-
-viewsRouter.get('/register', (req, res) => {
-    res.status(200).render('register-form');
-  });
+viewsRouter.get('',viewController.getLogin);
+viewsRouter.get('/register', viewController.getRegister);
