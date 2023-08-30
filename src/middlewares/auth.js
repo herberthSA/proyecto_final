@@ -1,6 +1,6 @@
 export function checkUser(req, res, next) {
     console.log(req.session.user.email);
-    if (req.session.user.email) {
+    if (req.session.user.email && req.session.user.rol == 'user') {
       return next();
     }
     return res.status(401).render('error-page', { msg: 'please log in' });

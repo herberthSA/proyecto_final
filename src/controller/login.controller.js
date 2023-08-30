@@ -2,11 +2,23 @@ import { userData } from "../services/users.service.js";
 
 class loginControlllers {
     register = (req, res) => {
+      try {
         if (!req.user) {
           return res.json({ error: 'something went wrong' });
         }
         req.session.user = { _id: req.user._id, email: req.user.email, firstName: req.user.firstName, lastName: req.user.lastName, isAdmin: req.user.isAdmin };
          return res.redirect('/')
+        
+      } catch (error) {
+        CustomError.createError({
+          name: "User creation error",
+          cause: "problemas en datos de ususarios",
+          message: "Error trying to create user",
+          code: EErros.INVALID_TYPES_ERROR,
+        
+      })
+        
+      }
     };
 
     login = async (req, res) => {

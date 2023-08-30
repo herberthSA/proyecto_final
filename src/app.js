@@ -15,9 +15,10 @@ import { loginRouter } from "./routes/login.router.js";
 import { viewsRouter } from "./routes/views.routers.js";
 import { iniPassport } from "./config/passportConfig.js";
 import dotenv from "dotenv";
-import { MsgModel } from "./DAO/models/chat.model.js";
+import { MsgModel } from "./DAO/Mongo/models/chat.model.js";
 import { routerVistaChatSocket } from "./routes/chat-vista-router.js";
-
+import errorHandler from "./middlewares/error.js";
+import { routerMocking } from "./routes/mockingproducts.router.js";
 dotenv.config();
 
 connectMongo();
@@ -68,10 +69,13 @@ app.use('/api/sessions',loginRouter);
 }); */
 app.use('/', viewsRouter);
 
+app.use('/mockingproducts', routerMocking)
+app.use(errorHandler);
 
 const httpServer = app.listen(port, () => {
     console.log(`listening on http://localhost:${port}`);
   });
+
 const socketServer = new Server(httpServer);
 socketServer.on('connection', (socket) => {
   console.log('Cliente conectado');

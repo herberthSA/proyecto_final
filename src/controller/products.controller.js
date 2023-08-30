@@ -1,3 +1,4 @@
+import CustomError from "../services/error/custom-error.js";
 import { products } from "../services/products.service.js";
 
 class productsControllers{
@@ -24,7 +25,12 @@ async getProducts(req,res){
     
     
   } catch (error) {
-    console.log(error);
+    CustomError.createError({
+        name: "User creation error",
+        message: "Error trying to create user",
+        code: EErros.INVALID_TYPES_ERROR,
+      
+    })
     return res.status(500).json({
       status: "error",
       msg: "something went wrong :(",

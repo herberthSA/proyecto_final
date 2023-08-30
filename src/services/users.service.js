@@ -1,10 +1,10 @@
-import { UserModel } from "../DAO/models/users.model.js";
+import { get } from "mongoose";
 
 class userDatas {
     async usersInformation(id){
-        const viewCart = await UserModel.findOne({_id:id}).populate('cart');
-
-    } 
+        const viewCart = await get(id);
+        return viewCart
+    }   
 }
 
 export const userData = new userDatas()

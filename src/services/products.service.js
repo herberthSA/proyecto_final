@@ -1,4 +1,4 @@
-import { productsModel} from '../DAO/models/products.model.js';
+import { productsModel} from '../DAO/Mongo/models/products.model.js';
 
  class productService {
   validateUser(title, description, price ,thumbnail,status,category,code,stock ) {

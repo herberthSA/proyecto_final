@@ -1,5 +1,5 @@
-import { cartsModel } from "../DAO/models/carts.model.js";
-import { ticketsModel } from "../DAO/models/ticket.model.js";
+import { cartsModel } from "../DAO/Mongo/models/carts.model.js";
+import { ticketsModel } from "../DAO/Mongo/models/ticket.model.js";
 import { products } from "./products.service.js";
 
 class cartsService {
