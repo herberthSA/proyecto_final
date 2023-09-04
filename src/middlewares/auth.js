@@ -1,5 +1,7 @@
+import { logger } from "../utils/logger.js";
+
 export function checkUser(req, res, next) {
-    console.log(req.session.user.email);
+    logger.debug(req.session.user.email);
     if (req.session.user.email && req.session.user.rol == 'user') {
       return next();
     }

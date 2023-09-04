@@ -3,6 +3,7 @@ import local from 'passport-local';
 import { createHash, isValidPassword } from '../utils/bcrypt.js';
 import { UserModel } from '../DAO/Mongo/models/users.model.js';
 import {carts} from '../services/carts.service.js';
+import { logger } from '../utils/logger.js';
 
 const LocalStrategy = local.Strategy;
 
@@ -12,13 +13,13 @@ export function iniPassport() {
     new LocalStrategy({ usernameField: 'email' }, async (username, password, done) => {
       try {
         const user = await UserModel.findOne({ email: username });
-        console.log('prueba', user)
-        if (!user) {
-          console.log('User Not Found with username (email) ' + username);
+        logger.debug(user)
+       if (!user) {
+          logger.warn('User Not Found with username (email) ' + username);
           return done(null, false);
         }
         if (!isValidPassword(password, user.password)) {
-          console.log('Invalid Password');
+         logger.warn('Invalid Password');
           return done(null, false);
         }
 
@@ -41,7 +42,7 @@ export function iniPassport() {
           const { email, firstName, lastName,age,rol } = req.body;
           let user = await UserModel.findOne({ email: username });
           if (user) {
-            console.log('User already exists');
+            logger.debug('User already exists');
             return done(null, false);
           }
           const newcart = await  carts.createOne();
@@ -56,12 +57,12 @@ export function iniPassport() {
             
           };
           let userCreated = await UserModel.create(newUser);
-          console.log(userCreated);
-          console.log('User Registration succesful');
+         logger.info(userCreated);
+         logger.info('User Registration succesful');
           return done(null, userCreated);
         } catch (e) {
-          console.log('Error in register');
-          console.log(e);
+          logger.info('Error in register');
+          logger.error(e);
           return done(e);
         }
       }

@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger.js";
 import { UserModel } from "./models/users.model";
 
 
@@ -10,7 +11,7 @@ export default class users {
     };
   
     insert = async (data) => {
-      console.log(data);
+      logger .info(data);
       const result = await contactsModel.create(data);
       return result;
     };

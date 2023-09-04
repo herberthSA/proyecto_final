@@ -19,12 +19,15 @@ import { MsgModel } from "./DAO/Mongo/models/chat.model.js";
 import { routerVistaChatSocket } from "./routes/chat-vista-router.js";
 import errorHandler from "./middlewares/error.js";
 import { routerMocking } from "./routes/mockingproducts.router.js";
+import CustomError from "./services/error/custom-error.js";
+import EErros from "./services/error/enums.js";
+import { logger } from "./utils/logger.js";
+import { loggerTest } from "./routes/loggerTest.router.js";
+import 'express-async-errors'
 dotenv.config();
-
-connectMongo();
 const app = express();
 const port = process.env.PORT;
-
+connectMongo();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -44,7 +47,6 @@ app.set("views", __dirname + "/views");
 app.set("view engine","handlebars");
 
 app.use(express.static(__dirname + "/public"));
-console.log(__dirname + '/public')
 app.use(morgan('dev'));
 
 // Rutas: API REST con Json
@@ -56,7 +58,9 @@ app.use('/products',productsHtml);
 app.use('/carts',cartstsHtml);
 //chat-socket
 app.use('/vista/chat', routerVistaChatSocket);
-
+app.get('/test',async (req,res)=>{
+   
+});
 //rutas-session
 app.use('/api/sessions',loginRouter);
 /* app.use('/api/sessions/current', (req, res) => {
@@ -68,23 +72,30 @@ app.use('/api/sessions',loginRouter);
   });
 }); */
 app.use('/', viewsRouter);
+app.use('/mockingproducts', routerMocking);
+app.use('/loggerTest',loggerTest)
+app.get('/testerror', async(req,res)=>{
+  console.log(1);
+  CustomError.createError({
+        name: "User creation error",
+        cause:'desconocido',
+        message: "Error trying to create user",
+        code: EErros.INVALID_TYPES_ERROR
+      
+    })
+})
 
-app.use('/mockingproducts', routerMocking)
 app.use(errorHandler);
 
 const httpServer = app.listen(port, () => {
-    console.log(`listening on http://localhost:${port}`);
+    logger.info(`listening on http://localhost:${port}`);
   });
 
 const socketServer = new Server(httpServer);
 socketServer.on('connection', (socket) => {
-  console.log('Cliente conectado');
-  socket.on('msg_front_to_back', async (msg) => {
-    console.log(msg)
-    const msgCreated = await MsgModel.create(msg);
-    console.log(msgCreated)
-    const msgs = await MsgModel.find({});
-    console.log(msgs)
-    socketServer.emit('todos_los_msgs', msgs);
+   socket.on('msg_front_to_back', async (msg) => {
+   const msgCreated = await MsgModel.create(msg);
+   const msgs = await MsgModel.find({});
+   socketServer.emit('todos_los_msgs', msgs);
   });
 });

@@ -1,3 +1,5 @@
+import { logger } from "../../utils/logger,js";
+
 function addCart() {
     fetch('http://localhost:8080/api/carts', {
         method: 'POST'
@@ -10,7 +12,7 @@ function addCart() {
         }
       })
       .then(data => {
-        console.log(data);
+        
       })
       .catch(error => {
         console.error(error);
@@ -28,7 +30,7 @@ function addCart() {
           }
         })
         .then(data => {
-          console.log(data);
+          //console.log(data);
           alert('Producto eliminado con éxito');
           location.reload(); // Actualizar la página después de eliminar el producto
         })

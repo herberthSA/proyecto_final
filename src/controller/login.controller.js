@@ -1,4 +1,7 @@
+import CustomError from "../services/error/custom-error.js";
+import EErros from "../services/error/enums.js";
 import { userData } from "../services/users.service.js";
+import { logger } from "../utils/logger.js";
 
 class loginControlllers {
     register = (req, res) => {
@@ -10,13 +13,14 @@ class loginControlllers {
          return res.redirect('/')
         
       } catch (error) {
-        CustomError.createError({
+        logger.error(error);
+        /* CustomError.createError({
           name: "User creation error",
           cause: "problemas en datos de ususarios",
           message: "Error trying to create user",
           code: EErros.INVALID_TYPES_ERROR,
         
-      })
+       }) */
         
       }
     };
@@ -51,12 +55,12 @@ class loginControlllers {
         return res.json({ error: 'fail to register' });
     };
     logout =(req, res) => {
-      console.log(req.session)
+      logger.debug(req.session)
       req.session.destroy((err) => {
         if (err) {
           return res.status(500).render('error', { error: 'error inesperado no se pudo eliminar session' });
         }
-        console.log(req.session)
+        logger.debug(req.session)
         return res.redirect('/');
       });
     

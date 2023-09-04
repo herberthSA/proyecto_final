@@ -1,5 +1,6 @@
 import { cartsModel } from "../DAO/Mongo/models/carts.model.js";
 import { ticketsModel } from "../DAO/Mongo/models/ticket.model.js";
+import { logger } from "../utils/logger.js";
 import { products } from "./products.service.js";
 
 class cartsService {
@@ -25,12 +26,12 @@ async deleteOne(cartId , productId ){
         );
     
         if (result.nModified === 0) {
-          console.log('No se encontró el carrito o el producto en el carrito.');;
+          logger.info('No se encontró el carrito o el producto en el carrito.');;
         }
     
-        console.log('Producto eliminado del carrito.');;
+        logger.info('Producto eliminado del carrito.');;
       } catch (error) {
-        console.log('Error al eliminar el producto del carrito:', error);
+        logger.error('Error al eliminar el producto del carrito:', error);
       }
     
 }
@@ -54,7 +55,7 @@ try {
        if (existingProduct) {
         // El producto ya existe, aumentar la cantidad en 1
         existingProduct.quantity += 1;
-        console.log(existingProduct)
+        //console.log(existingProduct)
         await carrito.save();
         return existingProduct
       }else{
@@ -67,7 +68,7 @@ try {
    
    }
     catch (error) {
-        console.log(error);
+        logger.error(error)
         
         
     }
@@ -88,7 +89,7 @@ async updateQuantity(cartId, productId, newQuantity){
     
         return respuesta
       } catch (error) {
-        console.log('Error al actualizar la cantidad del producto en el carrito:', error);
+       logger.error('Error al actualizar la cantidad del producto en el carrito:', error);
       }
    
     
@@ -164,7 +165,7 @@ async purchase(id,email){
     }
   }
 
-  console.log("Monto total:", amount);
+  logger.debug("Monto total:", amount);
    const newTicket =await this.createTicket(id,amount,email)
   return newTicket;
 

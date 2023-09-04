@@ -1,5 +1,7 @@
 import CustomError from "../services/error/custom-error.js";
+import EErros from "../services/error/enums.js";
 import { products } from "../services/products.service.js";
+import { logger } from "../utils/logger.js";
 
 class productsControllers{
 
@@ -25,12 +27,13 @@ async getProducts(req,res){
     
     
   } catch (error) {
-    CustomError.createError({
+    logger.error(error);
+    /* CustomError.createError({
         name: "User creation error",
         message: "Error trying to create user",
         code: EErros.INVALID_TYPES_ERROR,
       
-    })
+    }) */
     return res.status(500).json({
       status: "error",
       msg: "something went wrong :(",
@@ -52,7 +55,7 @@ async addProduct (req, res){
         stock,
       } = req.body;
 
-      console.log(req.body);
+      logger.debug(req.body);
       const productCreated = await products.createOne(
         title,
         description,
@@ -69,7 +72,7 @@ async addProduct (req, res){
         data: productCreated,
       });
     } catch (error) {
-      console.log(error);
+       logger .error(error);
       return res.status(500).json({
         status: "error",
         msg: "something went wrong :(",

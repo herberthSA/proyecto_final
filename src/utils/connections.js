@@ -1,4 +1,9 @@
 import { connect } from "mongoose";
+import { logger } from "./logger.js";
+import CustomError from "../services/error/custom-error.js";
+import EErros from "../services/error/enums.js";
+
+
 export async function connectMongo() {
   try {
     await connect(
@@ -9,10 +14,17 @@ export async function connectMongo() {
         dbName: process.env.DBNAME // Especifica el nombre de tu base de datos aquí
       }
     );
-    console.log("plug to mongo!");
+    logger.info("plug to mongo!");
   } catch (error) {
-    console.log(error);
-    throw "can not connect to the db";
+    logger.error(error);
+    CustomError.createError({
+      name: "connect to DB error",
+      cause:'base de datos caidad',
+      message: "Error trying to connect DB",
+      code: EErros.DATABASES_ERROR
+    
+  })
+    //throw "can not connect to the db";
   }
 }
 

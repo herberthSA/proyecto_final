@@ -4,4 +4,4 @@ import { productsHtmlcontroller } from "../controller/productsHtml.controller.js
 
 export const productsHtml = express.Router();
 
-productsHtml.get("/", checkUser ,productsHtmlcontroller.viewProducts );
+productsHtml.get("/", productsHtmlcontroller.viewProducts );
