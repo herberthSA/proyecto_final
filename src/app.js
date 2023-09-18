@@ -23,7 +23,11 @@ import CustomError from "./services/error/custom-error.js";
 import EErros from "./services/error/enums.js";
 import { logger } from "./utils/logger.js";
 import { loggerTest } from "./routes/loggerTest.router.js";
-import 'express-async-errors'
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
+import   _path from './dirname.js';
+import 'express-async-errors';
+
 dotenv.config();
 const app = express();
 const port = process.env.PORT;
@@ -75,7 +79,6 @@ app.use('/', viewsRouter);
 app.use('/mockingproducts', routerMocking);
 app.use('/loggerTest',loggerTest)
 app.get('/testerror', async(req,res)=>{
-  console.log(1);
   CustomError.createError({
         name: "User creation error",
         cause:'desconocido',
@@ -84,6 +87,19 @@ app.get('/testerror', async(req,res)=>{
       
     })
 })
+
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.1",
+    info: {
+      title: "Documentación de productos y carrito",
+      description: "Ecommerce endpoint de productos y carrito",
+    },
+  },
+  apis: [`${_path}/docs/**/*.yaml`],
+};
+const specs = swaggerJSDoc(swaggerOptions);
+app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 app.use(errorHandler);
 

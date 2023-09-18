@@ -1,0 +1,247 @@
+paths:
+  /api/products:
+    get:
+      summary: Obtiene todos los prodcutos
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Los productos fueron devueltos satisfactoriamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Products"
+        "500":
+          description: Error del servidor. Usualmente generando la query o falla la conexion a la DB
+    post:
+      summary: Agregar un nuevo producto
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Se agregó un nuevo producto satisfactoriamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/ProductsAdd"
+  /api/products/{pid}:
+    get:
+      summary: Obtiene un producto
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: ID del producto  que se desea buscar
+          schema:
+            $type: String
+      responses:
+        "200":
+          description: Producto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Products"
+   
+    put:
+      summary: Actualizar un producto a partir del ID
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: ID del usuario que se busca
+          schema:
+            $type: String
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/updateUser"
+      responses:
+        "200":
+          description: Usuario modificado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Success"
+
+    delete:
+      summary: Elimina un producto
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: ID del usuario que se busca
+          schema:
+            $type: String
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/ProductsDelete"
+      responses:
+        "200":
+          description: Usuario modificado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Success"
+components:
+  schemas:
+    Success:
+      type: object
+      properties:
+        status:
+          type: string
+          description: success or error
+        message:
+          type: string
+          description: aclarando que ocurrió
+      example:
+        status: success
+        message: User updated
+    Products:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID auto generado por mongo
+        title:
+          type: string
+          description: nombre o título del producto
+        description:
+          type: string
+          description: La descripción de un producto
+        price:
+          type: number
+          description: precio del producto
+        thumbnail:
+          type: string
+      example:
+        _id: "649662f950ed03bd7d3961c0"
+        title: "producto prueba_3"
+        description: "Este es un producto prueba"
+        price: 200
+        thumbnail: "sin imagen"
+        status: true
+        category: "clothes"
+        code: "555158c"
+        stock: 17
+
+  requestBodies:
+    updateUser:
+      type: object
+      properties:
+        msg:
+          type: String
+          description: Se actulizo correctamente
+        data:
+          type: object
+          properties:
+            acknowledged: 
+              type: String
+              description: Estado de la actulización
+            modifiedCount:
+              type: String
+              description: Estado de la actulización
+            upsertedId:
+               type: String
+               description: Estado de la actulización
+            upsertedCount:
+               type: String
+               description: Estado de la actulización
+            matchedCount:
+              type: String
+              description: Estado de la actulización
+         
+        
+      example:
+        msg: Se actulizo correctamente
+        data: 
+          acknowledged: true,
+          modifiedCount: 1
+          upsertedId: null
+          upsertedCoun: 0
+          matchedCount: 1
+  ProductsDelete:
+   type: object
+   properties:
+    msg:
+      type: string
+      description: Mensaje que indica que la eliminación se realizó correctamente
+    data:
+      type: object
+      properties:
+        acknowledged:
+          type: string
+          description: Estado de la acción, ya sea "True" o "False"
+        deletedCount:
+          type: string
+          description: Cantidad de elementos eliminados
+       
+   example:
+    msg: Se eliminó correctamente
+    data:
+      acknowledged: True
+      deletedCount: 1
+  ProductsAdd:
+    type: object
+    properties:
+      status:
+        type: string
+        description: Estado de la operación, por ejemplo, "success"
+      msg:
+        type: string
+        description: Mensaje relacionado con la creación del producto, por ejemplo, "producto creado"
+      data:
+        type: object
+        properties:
+          _id:
+            type: string
+            description: ID auto generado por MongoDB
+          title:
+            type: string
+            description: Nombre o título del producto
+          description:
+            type: string
+            description: Descripción del producto
+          price:
+            type: number
+            description: Precio del producto
+          thumbnail:
+            type: string
+            description: URL o descripción de la imagen del producto
+          status:
+            type: boolean
+            description: Estado del producto (activo o inactivo)
+          category:
+            type: string
+            description: Categoría del producto
+          code:
+            type: string
+            description: Código único del producto
+          stock:
+            type: integer
+            description: Cantidad en stock del producto
+    example:
+      status: success
+      msg: producto creado
+      data:
+        _id: "649662f950ed03bd7d3961c0"
+        title: "producto prueba_3"
+        description: "Este es un producto de prueba"
+        price: 200.0
+        thumbnail: "sin imagen"
+        status: true
+        category: "clothes"
+        code: "555158c"
+        stock: 17
+
+        

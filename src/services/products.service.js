@@ -37,7 +37,6 @@ async getOne(_id){
 
   async updateOne(_id, title, description, price ,thumbnail,status,category,code,stock) {
     if (!_id) throw new Error('invalid _id');
-    
     this.validateUser(title, description, price ,thumbnail,status,category,code,stock);
     const userUptaded = await productsModel.updateOne({ _id: _id }, { title, description, price ,thumbnail,status,category,code,stock });
     return userUptaded;

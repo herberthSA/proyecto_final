@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/app.js"
+    "dev": "nodemon -e yaml,js src/app.js"
   },
   "keywords": [],
   "author": "Herberth Orlando Mancía Cisneros",
@@ -27,6 +27,8 @@
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "socket.io": "^4.7.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
     "winston": "^3.10.0"
   },
   "devDependencies": {

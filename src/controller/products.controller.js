@@ -43,7 +43,7 @@ async getProducts(req,res){
 }
 };
 async addProduct (req, res){
-    try {
+  try {
       const {
         title,
         description,
@@ -68,7 +68,7 @@ async addProduct (req, res){
       );
       return res.status(201).json({
         status: "success",
-        msg: "user created",
+        msg: "product created",
         data: productCreated,
       });
     } catch (error) {
@@ -97,6 +97,7 @@ async deleteProduct(req,res){
      }
 };
 async updateProduct(req,res){
+ 
     try {
         const {pid} = req.params
         const {title, description, price ,thumbnail,status,category,code,stock} = req.body
