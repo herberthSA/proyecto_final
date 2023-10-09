@@ -91,12 +91,6 @@ async updateQuantity(cartId, productId, newQuantity){
       } catch (error) {
        logger.error('Error al actualizar la cantidad del producto en el carrito:', error);
       }
-   
-    
-    
-    
-    
-    
 }
 
  #generateRandomCode(length) {

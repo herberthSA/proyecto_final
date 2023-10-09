@@ -3,8 +3,8 @@ import { productsModel} from '../DAO/Mongo/models/products.model.js';
  class productService {
   validateUser(title, description, price ,thumbnail,status,category,code,stock ) {
     if (!title || !description || !price) {
-      console.log('validation error: please complete firstName, lastname and email.');
-      throw new Error('validation error: please complete firstName, lastname and email.');
+      //console.log('validation error: please complete firstName, lastname and email.');
+      throw new Error('validation error: please complete information');
     }
   };
   async getAll(limit,page,category,stock) {

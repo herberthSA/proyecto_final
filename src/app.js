@@ -27,7 +27,6 @@ import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
 import   _path from './dirname.js';
 import 'express-async-errors';
-
 dotenv.config();
 const app = express();
 const port = process.env.PORT;
@@ -36,7 +35,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
-    store: MongoStore.create({ mongoUrl:'mongodb+srv://admin:F3wBDRmov2yob7pt@ecommerce.eq2fgne.mongodb.net/ecommerce?retryWrites=true&w=majority', ttl: 7200 }),
+    store: MongoStore.create({ mongoUrl:process.env.MONGO_URL_1, ttl: 7200 }),
     secret: 'un-re-secreto',
     resave: true,
     saveUninitialized: true,
@@ -67,14 +66,8 @@ app.get('/test',async (req,res)=>{
 });
 //rutas-session
 app.use('/api/sessions',loginRouter);
-/* app.use('/api/sessions/current', (req, res) => {
-  console.log(req.session.user)
-  return res.status(200).json({
-    status: 'success',
-    msg: 'datos de la session',
-    payload: req.session.user || {},
-  });
-}); */
+
+
 app.use('/', viewsRouter);
 app.use('/mockingproducts', routerMocking);
 app.use('/loggerTest',loggerTest)
@@ -100,9 +93,7 @@ const swaggerOptions = {
 };
 const specs = swaggerJSDoc(swaggerOptions);
 app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
-
 app.use(errorHandler);
-
 const httpServer = app.listen(port, () => {
     logger.info(`listening on http://localhost:${port}`);
   });

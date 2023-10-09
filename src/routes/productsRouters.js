@@ -9,7 +9,7 @@ routerProducts.get("/", productsController.getProducts);
 // Ruta para ver un producto en especifico
 routerProducts.get("/:pid", productsController.getOneproduct);
 // Ruta para agregar nuevos productos
-routerProducts.post("/",checkAdmin,productsController.addProduct);
+routerProducts.post("/",productsController.addProduct);
 // Ruta para eliminar un producto por su ID
 routerProducts.delete('/:pid',checkAdmin,productsController.deleteProduct);
 // Ruta para actualizar un campo y su valor por medio del ID

@@ -1,7 +1,7 @@
-import CustomError from "../services/error/custom-error.js";
-import EErros from "../services/error/enums.js";
+import productDTO from "../DTO/products.dto.js";
 import { products } from "../services/products.service.js";
 import { logger } from "../utils/logger.js";
+const productdto = new productDTO()
 
 class productsControllers{
 
@@ -44,27 +44,17 @@ async getProducts(req,res){
 };
 async addProduct (req, res){
   try {
-      const {
-        title,
-        description,
-        price,
-        thumbnail,
-        status,
-        category,
-        code,
-        stock,
-      } = req.body;
-
       logger.debug(req.body);
+      const dataProduct = productdto.postProduct(req.body)   
       const productCreated = await products.createOne(
-        title,
-        description,
-        price,
-        thumbnail,
-        status,
-        category,
-        code,
-        stock
+        dataProduct.title,
+        dataProduct.description,
+        dataProduct.price,
+        dataProduct.thumbnail,
+        dataProduct.status,
+        dataProduct.category,
+        dataProduct.code,
+        dataProduct.stock
       );
       return res.status(201).json({
         status: "success",
@@ -111,7 +101,6 @@ async updateProduct(req,res){
 
 
 }
-
 }
 
 export const productsController = new productsControllers()

@@ -4,7 +4,8 @@ import { createHash, isValidPassword } from '../utils/bcrypt.js';
 import { UserModel } from '../DAO/Mongo/models/users.model.js';
 import {carts} from '../services/carts.service.js';
 import { logger } from '../utils/logger.js';
-
+import { user } from '../DAO/Mongo/users.mongo.js';
+const Users = user
 const LocalStrategy = local.Strategy;
 
 export function iniPassport() {
@@ -56,7 +57,7 @@ export function iniPassport() {
             cart: newcart._id
             
           };
-          let userCreated = await UserModel.create(newUser);
+          let userCreated = await Users.insert(newUser);
          logger.info(userCreated);
          logger.info('User Registration succesful');
           return done(null, userCreated);
