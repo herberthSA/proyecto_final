@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { Schema,model } from "mongoose";
 import monsoosePaginate from 'mongoose-paginate-v2';
 
@@ -34,6 +35,11 @@ const schema = new Schema({
     type: String,
     required: false,
     default:'user'
+  },
+  lastLogin : {
+    type: Date,
+    required: false,
+    default: DateTime.now().setZone('America/Mexico_City')
   },
   cart: {
     type: Schema.Types.ObjectId,

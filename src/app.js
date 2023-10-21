@@ -27,12 +27,19 @@ import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
 import   _path from './dirname.js';
 import 'express-async-errors';
+import { usersRouter } from "./routes/users.router.js";
+import { emailTransport } from "./utils/email.js";
 dotenv.config();
 const app = express();
 const port = process.env.PORT;
 connectMongo();
+// middlewares 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(__dirname + "/public"));
+app.use(morgan('dev'));
+
+// Configuración de passport
 app.use(
   session({
     store: MongoStore.create({ mongoUrl:process.env.MONGO_URL_1, ttl: 7200 }),
@@ -45,31 +52,31 @@ iniPassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Configuración de motor de plantillas
+
 app.engine('handlebars',handlebars.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine","handlebars");
 
-app.use(express.static(__dirname + "/public"));
-app.use(morgan('dev'));
+// Rutas: 
 
-// Rutas: API REST con Json
 app.use('/api/products', routerProducts);
 app.use('/api/carts', routerCarts);
+// contiene la vista de usuarios
+app.use('/api/users',usersRouter);
+app.use('/mockingproducts', routerMocking);
 
-//Rutas : HTML render
+
+//Rutas : de vistas
+
 app.use('/products',productsHtml);
 app.use('/carts',cartstsHtml);
-//chat-socket
 app.use('/vista/chat', routerVistaChatSocket);
-app.get('/test',async (req,res)=>{
-   
-});
+
 //rutas-session
+
 app.use('/api/sessions',loginRouter);
-
-
 app.use('/', viewsRouter);
-app.use('/mockingproducts', routerMocking);
 app.use('/loggerTest',loggerTest)
 app.get('/testerror', async(req,res)=>{
   CustomError.createError({

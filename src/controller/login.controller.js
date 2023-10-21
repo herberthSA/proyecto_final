@@ -1,5 +1,6 @@
 import CustomError from "../services/error/custom-error.js";
 import EErros from "../services/error/enums.js";
+import { loginservice } from "../services/login.service.js";
 import { userData } from "../services/users.service.js";
 import { logger } from "../utils/logger.js";
 
@@ -14,14 +15,7 @@ class loginControlllers {
         
       } catch (error) {
         logger.error(error);
-        /* CustomError.createError({
-          name: "User creation error",
-          cause: "problemas en datos de ususarios",
-          message: "Error trying to create user",
-          code: EErros.INVALID_TYPES_ERROR,
-        
-       }) */
-        
+               
       }
     };
 
@@ -30,14 +24,15 @@ class loginControlllers {
           return res.json({ error: 'invalid credentials' });
         }
       
-         req.session.user = {
+          req.session.user = {
           email: req.user.email,
           firstName: req.user.firstName,
           rol: req.user.rol,
           id: req.user._id.toString(),
           cartID:req.user.cart
         };
-         return res.redirect('/products');
+        const ultimaConexion = await loginservice.lastLogin(req.user.email);
+        return res.status(200).redirect('/products');
     };
 
     currentDatauser = async (req, res) => {
