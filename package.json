@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "mocha test/supertest.test.js",
-    "dev": "nodemon -e yaml,js src/app.js"
+    "dev": "nodemon -e yaml,js src/app.js",
+     "start": "node  src/app.js"
   },
   "keywords": [],
   "author": "Herberth Orlando Mancía Cisneros",
